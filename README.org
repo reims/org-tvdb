@@ -7,7 +7,7 @@
    status.
 ** Installation and configuration
    Either clone this repo and add the folder to your load path or
-   install from melpa (not available yet).  Then
+   install from melpa (not yet available).  Then
    #+BEGIN_SRC emacs-lisp
    (require 'org-tvdb)
    #+END_SRC
