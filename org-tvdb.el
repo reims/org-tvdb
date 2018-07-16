@@ -95,9 +95,9 @@
 (defun org-tvdb--query (query-fn finalize-fn end-point &optional params)
   "Query END-POINT with PARAMS and login if necessary.
 
-The query is done with QUERY-FN. QUERY-FN must return a deferred
-object that returns a response. The result of calling FINALIZE-FN
-on the response is returned."
+The query is done with QUERY-FN.  QUERY-FN must return a deferred
+object that returns a response.  The result of calling
+FINALIZE-FN on the response is returned."
   (deferred:$
     (funcall query-fn end-point params)
     (deferred:nextc it
