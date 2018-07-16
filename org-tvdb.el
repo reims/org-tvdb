@@ -141,16 +141,25 @@ FINALIZE-FN on the response is returned."
     (or aired-season
 	(error "Not in season"))))
 
+(parse-time-string "2017-01-01")
+
+(defun org-tvdb--has-been-released? (episode)
+  "Return non-nil if first aired date of EPISODE is in the past."
+  (destructuring-bind (_ _ _ current-day current-month current-year _ _ _) (decode-time (current-time))
+    (destructuring-bind (_ _ _ release-day release-month release-year _ _ _) (parse-time-string (alist-get 'firstAired episode))
+      (and (>= current-year release-year)
+	   (>= current-month release-month)
+	   (>= current-day release-day)))))
+
 (defun org-tvdb--insert-episode (episode)
   "Insert episode defined by the alist EPISODE."
   (if (= 1 (alist-get 'airedEpisodeNumber episode))
       (org-insert-subheading nil)
     (org-insert-heading))
   (insert (alist-get 'episodeName episode))
-  (if (< (org-tvdb--current-millis)
-	 (org-tvdb--time-to-millis (parse-time-string (alist-get 'firstAired episode)))) ; parse-time strings returns the wrong result
-      (org-todo org-tvdb-unreleased-status)
-    (org-todo org-tvdb-released-status))
+  (if (org-tvdb--has-been-released? episode)
+      (org-todo org-tvdb-released-status)
+    (org-todo org-tvdb-unreleased-status))
   (org-return t)
   (insert (alist-get 'overview episode))
   (fill-paragraph)
