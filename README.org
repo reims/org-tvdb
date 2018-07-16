@@ -1,0 +1,34 @@
+* org-tvdb - keep track of tvshows in orgmode
+** What does this do?
+   This package lets you track tv shows that you watch.  It gets the
+   information about episodes from the [[https://www.thetvdb.com/][TVDB]]. Each show, season and
+   episode is represented by a headline. Whether an episode has aired
+   and whether you have already watched it, is tracked by the TODO
+   status.
+** Installation and configuration
+   Either clone this repo and add the folder to your load path or
+   install from melpa (not available yet).  Then
+   #+BEGIN_SRC emacs-lisp
+   (require 'org-tvdb)
+   #+END_SRC
+   or rely on the autoloads. You also have to give ~org-tvdb~ a valid
+   api key for the TVDB API.  This done by setting ~org-tvdb-api-key~
+   either through custom or with ~setq~.
+
+   You can of course also use [[https://github.com/jwiegley/use-package][use-package]].
+   #+BEGIN_SRC emacs-lisp
+   (use-package org-tvdb
+	:ensure nil ; remove this if available through melpa
+	:custom (org-tvdb-api-key "your-api-key")
+	:commands (org-tvdb-add-season org-tvdb-add-series org-tvdb-mark-series-watched org-tvdb-mark-season-watched org-tvdb-update-series))
+   #+END_SRC
+** Usage
+   ~org-tvdb~ gives you the following commands to work with series in
+   an ~org-mode~ buffer.
+   - ~org-tvdb-add-series~: Add a new series at point.
+   - ~org-tvdb-add-season~: Add a new season to the series at point.
+   - ~org-tvdb-update-series~: Update series at point.
+   - ~org-tvdb-mark-series-watched~: Mark the series at point watched
+     by changing the TODO status.
+   - ~org-tvdb-mark-season-watched~: Mark the season at point watched
+     by changing the TODO status.
