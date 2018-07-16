@@ -46,6 +46,7 @@
 
 (defvar org-tvdb--token nil)
 
+;;;###autoload
 (defun org-tvdb-insert-todo-list ()
   "Insert todo list of the form `org-tvdb-unreleased-status' `org-tvdb-released-status' | `org-tvdb-watched-status'."
   (interactive)
@@ -213,6 +214,7 @@ on the response is returned."
   (org-entry-put (point) "TVDBID" (number-to-string (alist-get 'id series)))
   (org-entry-put (point) "LAST_UPDATE" (number-to-string (org-tvdb--current-millis))))
 
+;;;###autoload
 (defun org-tvdb-add-series (name)
   "Add series with name NAME."
   (interactive "sName: ")
@@ -241,6 +243,7 @@ on the response is returned."
 	(last-updated-here (string-to-number (org-entry-get (point) "LAST_UPDATE"))))
     (> last-updated-in-db last-updated-here)))
 
+;;;###autoload
 (defun org-tvdb-update-series ()
   "Update current series."
   (interactive)
@@ -276,6 +279,7 @@ on the response is returned."
 			(deferred:nextc (org-tvdb-add-season (elt new-seasons idx))
 			  self)))))))))))))
 
+;;;###autoload
 (defun org-tvdb-mark-season-watched ()
   "Mark change status of all episodes in current season to `org-tvdb-watched-status'."
   (interactive)
