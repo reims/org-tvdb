@@ -44,3 +44,6 @@ flycheck_*.el
 
 # directory configuration
 .dir-locals.el
+
+# file used for testing
+test.org
