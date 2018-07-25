@@ -3,7 +3,9 @@
 ;; Copyright (C) 2018 Reimer Backhaus
 
 ;; Author: Reimer Backhaus <rbackhaus@gmail.com>
-;; Package-Requires: ((request-deferred "20160419.1605") (s "20180406.108"))
+;; Package-Requires: ((request-deferred "0.2.0") (s "1.12.0") (emacs "25"))
+;; Package-Version: 0.1.0
+;; Homepage: https://github.com/reims/org-tvdb
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
