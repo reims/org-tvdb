@@ -270,9 +270,11 @@ FINALIZE-FN on the response is returned."
 		     end-point
 		     `(("name" . ,name)))))
 
-(defun org-tvdb--insert-series-header (series)
-  "Insert header for series SERIES."
-  (org-insert-heading)
+(defun org-tvdb--insert-series-header (series at-top-level)
+  "Insert header for series SERIES.
+
+If AT-TOP-LEVEL is non-nil, insert heading at top level."
+  (org-insert-heading nil t at-top-level)
   (insert (alist-get 'seriesName series))
   (org-entry-put (point) "TVDB_SERIES_ID" (number-to-string (alist-get 'id series)))
   (org-entry-put (point) "LAST_UPDATE" (number-to-string (org-tvdb--current-millis))))
@@ -299,9 +301,12 @@ FINALIZE-FN on the response is returned."
 	      self)))))))
 
 ;;;###autoload
-(defun org-tvdb-add-series (name)
-  "Add series with name NAME."
-  (interactive "sName: ")
+(defun org-tvdb-add-series (name &optional arg)
+  "Add series with name NAME.
+
+If called with \\[universal-argument], inserts series as
+top-level heading."
+  (interactive "sName: \nP")
   (deferred:$
     (org-tvdb--search-series name)
     (deferred:nextc it
@@ -311,7 +316,7 @@ FINALIZE-FN on the response is returned."
 	      (error "No such series")
 	    (let* ((series (elt results 0))
 		   (id (alist-get 'id series)))
-	      (org-tvdb--insert-series-header series)
+	      (org-tvdb--insert-series-header series arg)
 	      (org-tvdb--fetch-series-summary id))))))
     (deferred:nextc it
       (lambda (summary)
