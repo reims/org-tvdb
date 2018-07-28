@@ -66,6 +66,7 @@
 
 ;;;###autoload
 (defun org-tvdb-released-tree ()
+  "Create sparse tree of all released but not watched episodes."
   (interactive)
   (org-occur (s-concat "^\\*+ " org-tvdb-released-status)))
 
@@ -169,7 +170,7 @@ FINALIZE-FN on the response is returned."
     (or aired-season
 	(error "Not in series"))))
 
-(defun org-tvdb--unreleasedp (episode)
+(defun org-tvdb--unreleased-p (episode)
   "Return non-nil if first aired date of EPISODE is in the past."
   (let ((firstAired (alist-get 'firstAired episode)))
     (or (or (null firstAired) (zerop (length firstAired)))
@@ -190,7 +191,7 @@ FINALIZE-FN on the response is returned."
   (insert (or (alist-get 'episodeName episode)
 	      (s-concat "Episode "
 			(number-to-string (alist-get 'airedEpisodeNumber episode)))))
-  (if (org-tvdb--unreleasedp episode)
+  (if (org-tvdb--unreleased-p episode)
       (org-todo org-tvdb-unreleased-status)
     (org-todo org-tvdb-released-status))
   (org-return t)
@@ -306,8 +307,8 @@ If AT-TOP-LEVEL is non-nil, insert heading at top level."
 (defun org-tvdb-add-series (name &optional arg)
   "Add series with name NAME.
 
-If called with \\[universal-argument], inserts series as
-top-level heading."
+If ARG is non-nil (e.g. if called with \\[universal-argument]),
+inserts series as top level heading."
   (interactive "sName: \nP")
   (deferred:$
     (org-tvdb--search-series name)
@@ -352,7 +353,7 @@ top-level heading."
 					(alist-get 'airedEpisodeNumber ep2))))))
 	      (seq-do #'org-tvdb--insert-episode episodes))))))))
 
-(defun org-tvdb--must-updatep (head-response)
+(defun org-tvdb--must-update-p (head-response)
   "Check if LAST_UPDATE property is earlier then last-modified header in HEAD-RESPONSE."
   (let ((last-updated-in-db (org-tvdb--time-to-millis (date-to-time (request-response-header head-response "last-modified"))))
 	(last-updated-here (string-to-number (org-entry-get (point) "LAST_UPDATE"))))
@@ -367,7 +368,7 @@ top-level heading."
       (org-tvdb--fetch-series-head id)
       (deferred:nextc it
 	(lambda (resp)
-	  (if (org-tvdb--must-updatep resp)
+	  (if (org-tvdb--must-update-p resp)
 	      (org-tvdb--fetch-series-summary id)
 	    (deferred:cancel it))))
       (deferred:nextc it
