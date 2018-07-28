@@ -57,7 +57,7 @@
 
 (defcustom org-tvdb-agenda-command
   '("e" "Unwatched episodes" todo "RELEASED"
-    ((org-agenda-files '("~/dev/org-tvdb/test.org"))))
+    ((org-agenda-files '("path/to/org-file/with/tvseries"))))
   "Custom agenda commands to show released but not watched episdes."
   :type 'sexp
   :group 'org-tvdb)
