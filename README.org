@@ -17,10 +17,16 @@
 
    You can of course also use [[https://github.com/jwiegley/use-package][use-package]].
    #+BEGIN_SRC emacs-lisp
-   (use-package org-tvdb
-	:ensure nil ; remove this if available through melpa
-	:custom (org-tvdb-api-key "your-api-key")
-	:commands (org-tvdb-add-season org-tvdb-add-series org-tvdb-mark-series-watched org-tvdb-mark-season-watched org-tvdb-update-series))
+     (use-package org-tvdb
+	  :ensure nil ; remove this if available through melpa
+	  :custom (org-tvdb-api-key "your-api-key")
+	  :commands (org-tvdb-insert-todo-list
+		     org-tvdb-add-season
+		     org-tvdb-add-series
+		     org-tvdb-mark-series-watched
+		     org-tvdb-mark-season-watched
+		     org-tvdb-update-series
+		     org-tvdb-update-season))
    #+END_SRC
 ** Usage
    ~org-tvdb~ gives you the following commands to work with series in
