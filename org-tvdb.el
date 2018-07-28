@@ -187,7 +187,9 @@ FINALIZE-FN on the response is returned."
   (if (= 1 (alist-get 'airedEpisodeNumber episode))
       (org-insert-subheading nil)
     (org-insert-heading))
-  (insert (alist-get 'episodeName episode))
+  (insert (or (alist-get 'episodeName episode)
+	      (s-concat "Episode "
+			(number-to-string (alist-get 'airedEpisodeNumber episode)))))
   (if (org-tvdb--unreleasedp episode)
       (org-todo org-tvdb-unreleased-status)
     (org-todo org-tvdb-released-status))
