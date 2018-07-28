@@ -12,8 +12,8 @@
    (require 'org-tvdb)
    #+END_SRC
    or rely on the autoloads. You also have to give ~org-tvdb~ a valid
-   api key for the TVDB API.  This done by setting ~org-tvdb-api-key~
-   either through custom or with ~setq~.
+   api key for the TVDB API.  This is done by setting
+   ~org-tvdb-api-key~ either through custom or with ~setq~.
 
    You can of course also use [[https://github.com/jwiegley/use-package][use-package]].
    #+BEGIN_SRC emacs-lisp
@@ -31,10 +31,26 @@
 ** Usage
    ~org-tvdb~ gives you the following commands to work with series in
    an ~org-mode~ buffer.
+   - ~org-tvdb-insert-todo-list~: Insert ~#+TODO~ option with
+     released, unreleased and watched TODO status
    - ~org-tvdb-add-series~: Add a new series at point.
    - ~org-tvdb-add-season~: Add a new season to the series at point.
    - ~org-tvdb-update-series~: Update series at point.
+   - ~org-tvdb-update-season~: Update season at point.
    - ~org-tvdb-mark-series-watched~: Mark the series at point watched
      by changing the TODO status.
    - ~org-tvdb-mark-season-watched~: Mark the season at point watched
      by changing the TODO status.
+   - ~org-tvdb-released-tree~: Create sparse tree with released but
+     not watched episodes.
+
+   The idea is that you track tv series by adding them to an org file
+   and marking episodes as watched as you watch them.
+   ~org-tvdb-released-tree~ or ~org-tvdb-agenda-command~ can then be
+   used to view a list of episodes that are available but have not yet
+   been watched.
+
+   ~org-tvdb-agenda-command~ is a [[https://orgmode.org/worg/org-tutorials/org-custom-agenda-commands.html][custom agenda command]] that can be
+   used to view unwatched episodes in Org Agenda.  To use it, you need
+   at least to adjust the paths to your org files with tv series in
+   them.
