@@ -174,14 +174,14 @@ FINALIZE-FN on the response is returned."
   "Return non-nil if first aired date of EPISODE is in the past."
   (let ((firstAired (alist-get 'firstAired episode)))
     (or (or (null firstAired) (zerop (length firstAired)))
-      (destructuring-bind (_ _ _ current-day current-month current-year _ _ _) (decode-time (current-time))
-	(destructuring-bind (_ _ _ release-day release-month release-year _ _ _) (parse-time-string firstAired)
-	  (cond
-	   ((> release-year current-year) t)
-	   ((< release-year current-year) nil)
-	   ((> release-month current-month) t)
-	   ((< release-month current-month) nil)
-	   ((> release-day current-day) t)))))))
+	(destructuring-bind (_ _ _ current-day current-month current-year _ _ _) (decode-time (current-time))
+	  (destructuring-bind (_ _ _ release-day release-month release-year _ _ _) (parse-time-string firstAired)
+	    (cond
+	     ((> release-year current-year) t)
+	     ((< release-year current-year) nil)
+	     ((> release-month current-month) t)
+	     ((< release-month current-month) nil)
+	     ((> release-day current-day) t)))))))
 
 (defun org-tvdb--heading-for-episode (episode)
   "Return name of episode or a generic name for EPISODE."
@@ -199,7 +199,7 @@ FINALIZE-FN on the response is returned."
       (org-todo org-tvdb-unreleased-status)
     (org-todo org-tvdb-released-status))
   (org-return t)
-  (if-let ((overview (alist-get 'overview episode)))
+  (when-let ((overview (alist-get 'overview episode)))
     (insert overview))
   (fill-paragraph)
   (org-entry-put (point) "TVDB_EPISODE_ID" (number-to-string (alist-get 'id episode)))
