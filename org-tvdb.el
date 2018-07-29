@@ -341,11 +341,12 @@ inserts series as top level heading."
 Expects to be at the last episode to update."
   (while (outline-get-last-sibling)
     (when-let* ((aired-episode-property (org-entry-get (point) "TVDB_NUMBER_IN_SEASON"))
-		(aired-episode (string-to-number aired-episode-property)))
-      (org-tvdb--update-episode (cl-find-if (lambda (ep)
-					      (= aired-episode
-						 (alist-get 'airedEpisodeNumber ep)))
-					    episodes)))))
+		(aired-episode (string-to-number aired-episode-property))
+		(episode (cl-find-if (lambda (ep)
+				       (= aired-episode
+					  (alist-get 'airedEpisodeNumber ep)))
+				     episodes)))
+      (org-tvdb--update-episode episode))))
 
 ;;;###autoload
 (defun org-tvdb-update-season ()
