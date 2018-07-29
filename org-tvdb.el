@@ -335,10 +335,12 @@ inserts series as top level heading."
 
 (defun org-tvdb--update-episode (episode)
   "Update episode at point with data from EPISODE."
+  (org-entry-put (point) "TVDB_FIRST_AIRED" (alist-get 'firstAired episode))
   (when (and (string-equal (org-get-todo-state) org-tvdb-unreleased-status)
 	     (not (org-tvdb--unreleased-p episode)))
     (org-todo org-tvdb-released-status))
-  (org-edit-headline (org-tvdb--heading-for-episode episode)))
+  (org-edit-headline (org-tvdb--heading-for-episode episode))
+  (org-entry-put (point) "TVDB_LAST_UPDATE" (number-to-string (alist-get 'lastUpdated episode))))
 
 (defun org-tvdb--update-episodes (episodes)
   "Update episodes in season at point with data from EPISODES
