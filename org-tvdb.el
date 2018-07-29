@@ -329,6 +329,24 @@ inserts series as top level heading."
 			     #'<)))
 	  (org-tvdb--add-seasons seasons))))))
 
+(defun org-tvdb--update-episode (episode)
+  "Update episode at point with data from EPISODE."
+  (when (and (string-equal (org-get-todo-state) org-tvdb-unreleased-status)
+	     (not (org-tvdb--unreleased-p episode)))
+    (org-todo org-tvdb-released-status)))
+
+(defun org-tvdb--update-episodes (episodes)
+  "Update episodes in season at point with data from EPISODES
+
+Expects to be at the last episode to update."
+  (while (outline-get-last-sibling)
+    (when-let* ((aired-episode-property (org-entry-get (point) "TVDB_NUMBER_IN_SEASON"))
+		(aired-episode (string-to-number aired-episode-property)))
+      (org-tvdb--update-episode (cl-find-if (lambda (ep)
+					      (= aired-episode
+						 (alist-get 'airedEpisodeNumber ep)))
+					    episodes)))))
+
 ;;;###autoload
 (defun org-tvdb-update-season ()
   "Update season at point."
@@ -345,13 +363,16 @@ inserts series as top level heading."
 	    (outline-end-of-subtree)
 	    (let* ((last-episode (string-to-number (or (save-excursion (org-entry-get (point) "TVDB_NUMBER_IN_SEASON"))
 						       "0")))
-		   (episodes (sort (cl-remove-if (lambda (ep)
-						   (<= (alist-get 'airedEpisodeNumber ep) last-episode))
-						 (alist-get 'data season))
+		   (episodes (sort (alist-get 'data season)
 				   (lambda (ep1 ep2)
 				     (< (alist-get 'airedEpisodeNumber ep1)
-					(alist-get 'airedEpisodeNumber ep2))))))
-	      (seq-do #'org-tvdb--insert-episode episodes))))))))
+					(alist-get 'airedEpisodeNumber ep2)))))
+		   (new-episodes (cl-remove-if (lambda (ep)
+						 (<= (alist-get 'airedEpisodeNumber ep) last-episode))
+					       episodes)))
+	      (when (< 0 last-episode)
+		(org-tvdb--update-episodes episodes))
+	      (seq-do #'org-tvdb--insert-episode new-episodes))))))))
 
 (defun org-tvdb--must-update-p (head-response)
   "Check if LAST_UPDATE property is earlier then last-modified header in HEAD-RESPONSE."
