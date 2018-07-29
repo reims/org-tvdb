@@ -183,14 +183,18 @@ FINALIZE-FN on the response is returned."
 	   ((< release-month current-month) nil)
 	   ((> release-day current-day) t)))))))
 
+(defun org-tvdb--heading-for-episode (episode)
+  "Return name of episode or a generic name for EPISODE."
+  (or (alist-get 'episodeName episode)
+      (s-concat "Episode "
+		(number-to-string (alist-get 'airedEpisodeNumber episode)))))
+
 (defun org-tvdb--insert-episode (episode)
   "Insert episode defined by the alist EPISODE."
   (if (= 1 (alist-get 'airedEpisodeNumber episode))
       (org-insert-subheading nil)
     (org-insert-heading))
-  (insert (or (alist-get 'episodeName episode)
-	      (s-concat "Episode "
-			(number-to-string (alist-get 'airedEpisodeNumber episode)))))
+  (insert (org-tvdb--heading-for-episode episode))
   (if (org-tvdb--unreleased-p episode)
       (org-todo org-tvdb-unreleased-status)
     (org-todo org-tvdb-released-status))
@@ -333,7 +337,8 @@ inserts series as top level heading."
   "Update episode at point with data from EPISODE."
   (when (and (string-equal (org-get-todo-state) org-tvdb-unreleased-status)
 	     (not (org-tvdb--unreleased-p episode)))
-    (org-todo org-tvdb-released-status)))
+    (org-todo org-tvdb-released-status))
+  (org-edit-headline (org-tvdb--heading-for-episode episode)))
 
 (defun org-tvdb--update-episodes (episodes)
   "Update episodes in season at point with data from EPISODES
